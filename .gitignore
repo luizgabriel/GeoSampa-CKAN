@@ -2,5 +2,7 @@
 test/
 out/
 .venv/
+.idea/
+.vscode/
 
 *.ipynb
