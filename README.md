@@ -53,6 +53,7 @@ python geosampa.py import --output=./files --theme="01_Limites Administrativos"
 python geosampa.py export ckan --input=./files
 ```
 The script will ask your CKAN API Key, the CKAN site url and the organization which all datasets/packages will be registered.
+
 ![image](https://user-images.githubusercontent.com/7469145/110338009-48d45980-8005-11eb-9d1d-39e5a3659dea.png)
 
 Optionally, you can specify all information directly on the command line with:
