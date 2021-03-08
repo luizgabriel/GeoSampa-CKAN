@@ -199,6 +199,7 @@ def export_file(ckan, original_file, file, org, public, packages_cache):
             "private": not public,
             "author": "GeoSampa",
             "author_email": "geosampa@prefeitura.sp.gov.br",
+            "source": "http://geosampa.prefeitura.sp.gov.br/",
             "tags": [
                 {"name": "geosampa"},
                 {"name": theme_name},

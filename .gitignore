@@ -2,6 +2,7 @@
 test/
 out/
 .venv/
+venv/
 .idea/
 .vscode/
 
