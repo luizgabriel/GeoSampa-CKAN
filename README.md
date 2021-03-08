@@ -13,6 +13,12 @@ A command line script for importing all [GeoSampa](http://geosampa.prefeitura.sp
   </tr>
 </table>
 
+# How to install
+```
+git clone https://github.com/luizgabriel/GeoSampa-CKAN.git
+cd GeoSampa-CKAN/
+pip install -r requirements.txt
+```
 
 # How to use
 ```
