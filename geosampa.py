@@ -109,12 +109,12 @@ def download_file(geosampa_file, output):
             with open(local_filename, 'wb') as f:
                 for chunk in tqdm(r.iter_content(chunk_size=8192), desc="Downloading " + filename):
                     f.write(chunk)
-    except:
+
+        with open(local_filename + '.meta.json', 'w', encoding='latin-1') as m:
+            json.dump(geosampa_file, fp=m, indent=4)
+    except KeyboardInterrupt:
         if path.exists(local_filename):
             os.remove(local_filename)
-
-    with open(local_filename + '.meta.json', 'w', encoding='latin-1') as m:
-        json.dump(geosampa_file, fp=m, indent=4)
 
 
 def import_from_geosampa(arguments):
