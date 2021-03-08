@@ -102,6 +102,7 @@ def download_file(geosampa_file, output):
     local_filename = path.join(output, filename)
     if path.exists(local_filename):
         print(f"Skipping {local_filename}. Already exists")
+        return
 
     try:
         with requests.get(geosampa_file['link'], stream=True) as r:
