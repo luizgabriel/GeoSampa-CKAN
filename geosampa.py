@@ -235,7 +235,7 @@ def export_to_ckan(arguments):
 
     if not api_key:
         api_key = prompt({
-            'type': 'input',
+            'type': 'password',
             'name': 'api_key',
             'message': 'Inform your CKAN API Key:'
         })['api_key']
