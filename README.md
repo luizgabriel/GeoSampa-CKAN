@@ -2,6 +2,8 @@
 
 A command line script for importing all [GeoSampa](http://geosampa.prefeitura.sp.gov.br/) data and export automatically to any CKAN datastore.
 
+Demonstration Vídeo (In Brazillian Portuguese): [https://youtu.be/eGJYyjvI7k4](https://youtu.be/eGJYyjvI7k4)
+
 <table>
   <tr>
     <td>
