@@ -137,7 +137,10 @@ def import_from_geosampa(arguments):
         if filter_sub_theme and geosampa_file['sub_theme'] != filter_sub_theme:
             continue
 
-        download_file(geosampa_file, output)
+        try:
+            download_file(geosampa_file, output)
+        except:
+            print("GeoSampa returned with ERROR. ", geosampa_file)
 
 
 def find_package(ckan, name):
