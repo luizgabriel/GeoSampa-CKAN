@@ -173,6 +173,10 @@ def create_or_update_resource(ckan, data, fp):
         res = find_resource(ckan, data["hash"])
         if not res:
             res = ckan.call_action("resource_create", data, files={'upload': fp})
+            ckan.call_action("resource_create_default_resource_views", {
+                "create_datastore_views": True,
+                "resource": data
+            })
         else:
             data["id"] = res["id"]
             res = ckan.call_action("resource_patch", data, files={'upload': fp})
