@@ -12,7 +12,6 @@ Options:
   --output=<import-output>      GeoSampa files will be downloaded to [default: ./].
   --theme=<filter-theme>        Filter GeoSampa Themes.
   --sub-theme=<filter-theme>    Filter GeoSampa Sub-themes.
-  --host=<geosampa-host>        GeoSampa files will be downloaded to [default: http://geosampa.prefeitura.sp.gov.br].
   --site=<ckan-site>            Your ckan site. i.e.: https://dataurbe.appcivico.com/
   --api-key=<ckan-api-key>      Your CKAN API Key.
   --organization=<ckan-org>     The CKAN Organization the datasets will be created
@@ -34,9 +33,11 @@ import requests
 from ckanapi import RemoteCKAN
 from hashlib import sha1
 
+GEOSAMPA_HOST = "http://geosampa.prefeitura.sp.gov.br"
+GEOSAMPA_DOWNLOAD_HOST = "http://download.geosampa.prefeitura.sp.gov.br"
 
-def get_sub_folders(folder_name, host):
-    response = requests.post(host + "/PaginasPublicas/_SBC.aspx/pesquisaSubPastas", json={
+def get_sub_folders(folder_name):
+    response = requests.post(GEOSAMPA_HOST + "/PaginasPublicas/_SBC.aspx/pesquisaSubPastas", json={
         "pNomePasta": folder_name
     })
 
@@ -44,8 +45,8 @@ def get_sub_folders(folder_name, host):
     return [re.sub(r":[0-9]+", "", f) for f in result["d"].split("|") if f]
 
 
-def get_files(folder_name, host):
-    response = requests.post(host + "/PaginasPublicas/_SBC.aspx/pesquisaArquivos", json={
+def get_files(folder_name):
+    response = requests.post(GEOSAMPA_HOST + "/PaginasPublicas/_SBC.aspx/pesquisaArquivos", json={
         "pNomePasta": folder_name
     })
 
@@ -53,20 +54,20 @@ def get_files(folder_name, host):
     return [f for f in result["d"].split("|") if f]
 
 
-def find_geosampa_files(geosampa_host):
-    themes = get_sub_folders("TEMAS", geosampa_host)
-    base_link_url = geosampa_host + "/PaginasPublicas/downloadArquivoOL.aspx"
+def find_geosampa_files():
+    themes = get_sub_folders("TEMAS")
+    base_link_url = GEOSAMPA_DOWNLOAD_HOST + "/PaginasPublicas/downloadArquivo.aspx"
 
     for theme in themes:
 
-        sub_themes = get_sub_folders(theme, geosampa_host)
+        sub_themes = get_sub_folders(theme)
         for sub_theme in sub_themes:
             folder = f"{theme}//{sub_theme}//"
-            layers = get_sub_folders(folder, geosampa_host)
+            layers = get_sub_folders(folder)
 
             for layer in layers:
                 folder = f"{theme}//{sub_theme}//{layer}"
-                files = get_files(folder, geosampa_host)
+                files = get_files(folder)
 
                 for file in files:
 
@@ -126,18 +127,20 @@ def import_from_geosampa(arguments):
     elif not path.isdir(output):
         raise Exception('The output path is not a directory.')
 
-    geosampa_host = arguments['--host']
     filter_theme = arguments['--theme']
     filter_sub_theme = arguments['--sub-theme']
 
-    for geosampa_file in find_geosampa_files(geosampa_host):
+    for geosampa_file in find_geosampa_files():
         if filter_theme and geosampa_file['theme'] != filter_theme:
             continue
 
         if filter_sub_theme and geosampa_file['sub_theme'] != filter_sub_theme:
             continue
 
-        download_file(geosampa_file, output)
+        try:
+            download_file(geosampa_file, output)
+        except:
+            print("GeoSampa returned with ERROR. ", geosampa_file)
 
 
 def find_package(ckan, name):
@@ -173,6 +176,10 @@ def create_or_update_resource(ckan, data, fp):
         res = find_resource(ckan, data["hash"])
         if not res:
             res = ckan.call_action("resource_create", data, files={'upload': fp})
+            ckan.call_action("resource_create_default_resource_views", {
+                "create_datastore_views": True,
+                "resource": data
+            })
         else:
             data["id"] = res["id"]
             res = ckan.call_action("resource_patch", data, files={'upload': fp})
@@ -273,7 +280,7 @@ def export_to_ckan(arguments):
 
 
 def main():
-    arguments = docopt(__doc__, version='1.0')
+    arguments = docopt(__doc__, version='1.1')
 
     if arguments['import']:
         import_from_geosampa(arguments)

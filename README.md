@@ -29,14 +29,13 @@ Usage:
   geosampa.py export ckan [--input=<export-input>] [--site=<ckan-site>] [--public] [--api-key=<ckan-api-key>] [--organization=<ckan-org>]
   geosampa.py (-h | --help)
   geosampa.py --version
-  
+
 Options:
   -h --help                     Show this screen.
   --version                     Show version.
   --output=<import-output>      GeoSampa files will be downloaded to [default: ./].
   --theme=<filter-theme>        Filter GeoSampa Themes.
   --sub-theme=<filter-theme>    Filter GeoSampa Sub-themes.
-  --host=<geosampa-host>        GeoSampa files will be downloaded to [default: http://geosampa.prefeitura.sp.gov.br].
   --site=<ckan-site>            Your ckan site. i.e.: https://dataurbe.appcivico.com/
   --api-key=<ckan-api-key>      Your CKAN API Key.
   --organization=<ckan-org>     The CKAN Organization the datasets will be created
