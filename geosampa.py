@@ -280,7 +280,7 @@ def export_to_ckan(arguments):
 
 
 def main():
-    arguments = docopt(__doc__, version='1.0')
+    arguments = docopt(__doc__, version='1.1')
 
     if arguments['import']:
         import_from_geosampa(arguments)
